@@ -1,0 +1,7 @@
+To use the modelwatchr script:
+- update the paths used in the modelwatchr.rb script
+- cd to the models directory that contains the files you are editing 
+- run the script from that location: "watchr modelwatchr.rb"
+
+It will listen for file system events on the directory structure below the point of invocation.
+
