@@ -1,6 +1,5 @@
 
 
-
 def testModelRunner(script_location, changed_file)
 
   # Configure the resources
@@ -16,12 +15,11 @@ def testModelRunner(script_location, changed_file)
   envJava = envJava15
   
   puts script_location
-  puts changed_file
-
-  parser = LibXML::XML::Parser.file(changed_file)
-  xmlDoc = parser.parse
-  modelVersion =  xmlDoc.find('/probe/header/@version').first.to_s  # this gives the contents of the version attribute
-  puts modelVersion
+  puts changed_file 
+  
+  model_file = File.open( changed_file )
+  xml_doc = Nokogiri::XML( model_file )
+  modelVersion = xml_doc.xpath("/probe/header/@version").to_s
 
   modelTest = modelTest42
 

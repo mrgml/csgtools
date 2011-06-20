@@ -1,4 +1,4 @@
-require 'nokogiri'
+
 
 def start_format_check(script_location, changed_file)
   printf "Testing start-format..."

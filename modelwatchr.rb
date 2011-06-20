@@ -1,59 +1,111 @@
 #!/usr/bin/env /usr/bin/ruby
 
-require 'libxml'
+require 'nokogiri'  # for XML parsing
 
-def test(script_location, changed_file)
+require '/Users/garylyons/rails_projects/contest/lib/customercare3checker.rb'
+require '/Users/garylyons/rails_projects/contest/lib/testModelRunner.rb'
+require '/Users/garylyons/rails_projects/contest/lib/ModelDeploymentTester.rb'
+require '/Users/garylyons/rails_projects/contest/lib/ChartExportLogoTester.rb'
+require '/Users/garylyons/rails_projects/contest/lib/start_format_check.rb'
+require '/Users/garylyons/rails_projects/contest/lib/event_persistence_check.rb'
+#require 'customercare3checker.rb'
 
-  if changed_file.match('model').nil?
-    return  
-  end
 
-	# Configure the resources
-	modelTest45 = "/Users/garylyons/Documents/workspace/touchpoint_4_5_br/bin/testModel.sh"
-	modelTest51 = "/Users/garylyons/Documents/workspace/touchpoint_5_1_br/bin/testModel.sh"
-	touchpoint51home = "/Users/garylyons/Documents/workspace/touchpoint_5_1_br"
-	pass_image = "/Users/garylyons/rails_projects/contest/pass.png"
-	fail_image = "/Users/garylyons/rails_projects/contest/fail.png"
-	envJava15 = "/Users/garylyons/.bash_profile"
-	envJava16 = "/Users/garylyons/.bash_java16"
-	envJava = envJava15
-	
-	puts script_location
-	puts changed_file
-	
-	parser = LibXML::XML::Parser.file(changed_file)
-	xmlDoc = parser.parse
-	modelVersion =  xmlDoc.find('/probe/header/@version').first.to_s  # this gives the contents of the version attribute
-	puts modelVersion
+class ModelWatchr 
+  include REXML
+  def self.test(script_location, changed_file)
+    customer = changed_file.split("/")[0]  # will give customer name ( string to first "/" )
+    pass_image = "/Users/garylyons/rails_projects/contest/pass.png"
+    fail_image = "/Users/garylyons/rails_projects/contest/fail.png"
+    test = ""
+
+  #  puts changed_file
+
+    if changed_file.match('customercare3.xml')
+      # it's a customercare v3 file, pass to ccv3 test
+      status = testCCv3(script_location, changed_file)
+      test = "No test at all."
+    end
   
-  modelTest = modelTest45
-  
-  if modelVersion.match('5\.1')
-    modelTest = modelTest51
-    envJava = envJava16
-  else nil
-  end
+    if changed_file.match('features.ext.properties')  # NB this is a regex match
+      begin
+        my_tester = ExportLogoTest.new
+        status = my_tester.checkExportLogo(script_location, changed_file)
+        test = "Exported Reports Logo"
+      rescue Exception
+        STDERR.puts "Exported Reports Logo"
+      end
 
-	# Select and run the appropriate test/s;  stripping because system is giving me "/n"
-	if changed_file.match('models')
-		test = "testModel.sh"
-		status = system("source #{envJava}; cd #{touchpoint51home} ; #{modelTest.strip} #{script_location.strip}/#{changed_file.strip}")
-	else
-	  puts.nil
-	end
+      if status then
+        begin
+          status = event_persistence_check(script_location, changed_file)
+          if status
+            test += "\nevent-persistence-property"
+          else
+            test = "\nevent-persistence-property"
+          end
+        rescue Exception => whatever_exception
+         STDERR.puts "Got exception running event-persistence-property"
+         STDERR.puts whatever_exception
+        end
+      end
+    
+    end
+  
+  
+  	# Select and run the appropriate test/s;  stripping because system is giving me "/n"
+    if changed_file.match('models')
+      begin
+        status = testModelRunner(script_location, changed_file)
+        test = "\ntestModel.sh"
+      rescue Exception => test_model_exception
+        STDERR.puts "Got exception running testModel.sh"
+        STDERR.puts test_model_exception
+      end
+      if status then
+        begin
+          status = start_format_check(script_location, changed_file)
+          if status
+            test += "\nstart-format"
+          else
+            test = "\nstart-format"
+          end
+        rescue Exception => exception
+          STDERR.puts "Got exception running start-format"
+          STDERR.puts "Exception info: \n #{exception} \n #{exception.backtrace.join("\n")}"
+          STDERR.puts "The exception model is: #{changed_file}"
+        end
+      end
+    
+    else
+    end
 	
-	# Now growl the result
-	application_name = "Continyous"
-	if status
-		image = pass_image
-		result = "#{changed_file.split("/").last} has just passed #{test}"
-	else
-		image = fail_image
-		result = "#{changed_file.split("/").last} has just failed #{test}"
-	end
-	# puts "'/usr/local/bin/growlnotify -n \"#{application_name}\" --image \"#{image}\" -m \"#{result}\" '"
-	# puts `which growlnotify`
-	`/usr/local/bin/growlnotify -n \"#{application_name}\" --image \"#{image}\" -m \"#{result}\"`
+	
+  	# if it passes testModel.sh call a script to test that the model deploys/upgrades.
+    if status
+    	if isDeployValid(script_location, changed_file)
+    	  # call capistrano to deploy it (somehow)
+    	  # get the remote status
+      end
+    end
+	
+  	# Now growl the result
+  	application_name = "Contest"
+  	@sticky = ""
+  	if status
+  		image = pass_image
+  		result = "#{customer}: \n #{changed_file.split("/").last} has just passed: #{test}"
+  	elsif status == false
+  		image = fail_image
+  		result = "#{customer}: \n #{changed_file.split("/").last} has just failed: #{test}"
+  		@sticky = "-s"
+  	else
+  	  return
+  	end
+  	# puts "'/usr/local/bin/growlnotify -n \"#{application_name}\" --image \"#{image}\" -m \"#{result}\" '"
+  	# puts `which growlnotify`
+  	`/usr/local/bin/growlnotify #{@sticky} -n \"#{application_name}\" --image \"#{image}\" -m \"#{result}\"`
+  end
 end
 		
-watch( '.*\.xml' )  { |md| test(`pwd`,md[0]) } 
+watch( '.*\.(xml|properties)' )  { |md| ModelWatchr.test(`pwd`,md[0]) } 
