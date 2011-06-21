@@ -12,7 +12,6 @@ require '/Users/garylyons/rails_projects/contest/lib/event_persistence_check.rb'
 
 
 class ModelWatchr 
-  include REXML
   def self.test(script_location, changed_file)
     customer = changed_file.split("/")[0]  # will give customer name ( string to first "/" )
     pass_image = "/Users/garylyons/rails_projects/contest/pass.png"
