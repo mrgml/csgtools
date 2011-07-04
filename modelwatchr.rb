@@ -1,21 +1,25 @@
-#!/usr/bin/env /usr/bin/ruby
+#!/usr/bin/env ruby
+
+# Have to find and set the location of the testing scripts
+# It's either this way or hack a route through watchr
+# Using a global variable so it can be accessed in the class too
+$CONTEST_LOCATION = File.expand_path(File.dirname(__FILE__))
+$LOAD_PATH << $CONTEST_LOCATION
 
 require 'nokogiri'  # for XML parsing
 
-require '/Users/garylyons/rails_projects/contest/lib/customercare3checker.rb'
-require '/Users/garylyons/rails_projects/contest/lib/testModelRunner.rb'
-require '/Users/garylyons/rails_projects/contest/lib/ModelDeploymentTester.rb'
-require '/Users/garylyons/rails_projects/contest/lib/ChartExportLogoTester.rb'
-require '/Users/garylyons/rails_projects/contest/lib/start_format_check.rb'
-require '/Users/garylyons/rails_projects/contest/lib/event_persistence_check.rb'
-#require 'customercare3checker.rb'
-
+require "#{$CONTEST_LOCATION}/lib/customercare3checker.rb"
+require "#{$CONTEST_LOCATION}/lib/testModelRunner.rb"
+require "#{$CONTEST_LOCATION}/lib/ModelDeploymentTester.rb"
+require "#{$CONTEST_LOCATION}/lib/ChartExportLogoTester.rb"
+require "#{$CONTEST_LOCATION}/lib/start_format_check.rb"
+require "#{$CONTEST_LOCATION}/lib/event_persistence_check.rb"
 
 class ModelWatchr 
   def self.test(script_location, changed_file)
     customer = changed_file.split("/")[0]  # will give customer name ( string to first "/" )
-    pass_image = "/Users/garylyons/rails_projects/contest/pass.png"
-    fail_image = "/Users/garylyons/rails_projects/contest/fail.png"
+    pass_image = "#{$CONTEST_LOCATION}/pass.png"
+    fail_image = "#{$CONTEST_LOCATION}/fail.png"
     test = ""
 
   #  puts changed_file
