@@ -37,6 +37,7 @@ def testModelRunner(script_location, changed_file)
     return "File untestable."
   end
   
+  puts "Testing with: #{modelTest.strip}"
 
 	return system("source #{envJava}; cd #{touchpoint_home} ; #{modelTest.strip} #{script_location.strip}/#{changed_file.strip}")
   
