@@ -12,10 +12,10 @@ def event_persistence_check(script_location, changed_file)
   
   props = load_properties("#{script_location.strip}/#{changed_file.strip}")
   event_persistence_prop_value = props[event_persistence_prop]
-  # puts "event_persistence_prop_value is : #{event_persistence_prop_value}"
+  # puts "event_persistence_prop_value is :#{event_persistence_prop_value}."
 
-  if event_persistence_prop_value
-    result = false
+  if !event_persistence_prop_value
+    result = true
   end
   
   if result
@@ -39,8 +39,8 @@ def load_properties(properties_filename)
         i = line.index('=')
         if (i)
           properties[line[0..i - 1].strip] = line[i + 1..-1].strip
-        else
-          properties[line] = ''
+#        else
+#          properties[line] = ''
         end
       end
     end      
