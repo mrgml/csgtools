@@ -1,0 +1,32 @@
+
+1) Install git (probably done if you're reading this)
+2) Install Ruby (eg http://www.ruby-lang.org/en/news/2011/07/15/ruby-1-9-2-p290-is-released/)
+3) Install RubyGems (http://docs.rubygems.org/read/chapter/3)
+4) Clone the git repository: git clone git://magpie/contest
+5) change touchpoint locations in lib/testModelRunner.rb
+6) change java environments in lib/testModelRunner.rb
+7) install watchr (gem install watchr)
+8) install nokogiri (gem install nokogiri)
+
+Run contest like this:
+1) cd to the customers/trunk directory
+2) watchr /path/to/here/contest/modelwatchr.rb
+
+Try it out:
+1) edit a model file and save it (it should run the relevant testModel)
+2) edit a features.properties file and save it (NB current tests (13/1/12) are for event persistence and export logo)
+
+
+
+
+
+FROM SvN BLOG:
+
+It used to be a jarring experience to setup a new machine for development, but progress has paved the dirt road into a silky smooth autobahn. These are the tools we use today:
+
+Homebrew: Remember how painful it used to be to get imagemagick installed? Now it takes about a minute. “brew install imagemagick”. Same story for git and other Linux dependencies.
+rbenv/ruby-build: We have some apps running on Ruby 1.8.7, some on 1.9.2, and some on 1.9.3. ruby-build makes it easy to compile all three, rbenv makes it easy to switch between them on a per-project basis. We run rbenv in production as well, so all you need to do to change the Ruby version there is alter .rbenv-version—development and production is always on the same page.
+Bundler: Not everyone at 37signals loved Bundler at first, but now that it’s stable, they’ve been won over. I now curse whenever I have to use an old application that hasn’t been setup with Bundler. Manually tracing down dependencies?! How prehistoric!
+rake setup: All our apps has a rake setup task that’ll run bundler, create the databases, import seeds, and install any auxiliary software (little these days) or do any other setup. So when you git clone a new app, you know that “rake setup” will take care of you.
+Pow: No more messing with Apache or nginx for local development. All it takes for Pow to add another app is a symlink. All the apps are always configured and available at basecamp.dev, highrise.dev, etc without messing with the hosts file either.
+Thanks to Max Howell for Homebrew, Sam Stephenson for rbenv/ruby-build and Pow, and Carl Lerche/Yehuda Katz for Bundler. Thanks to them, starting from scratch has never been easier.
