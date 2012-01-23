@@ -23,15 +23,13 @@ def testCCv3(script_location, changed_file)
   model_list.each { |model| 
     doc = Nokogiri::XML( File.open( "#{script_location.strip}/#{customer}/models/#{model}" ) )
     service_name_set = doc.xpath("/probe/computed-counters/computed-service/@name")
-    # puts "service_name_set is: #{service_name_set}"
     service_name_set.each { |name| 
-      # puts "name is: #{name.to_s}"
       available_services << name.to_s
     }
     
   }
   
-  puts "available_services is: #{available_services.join(',')}"
+  # puts "available_services is: #{available_services.join(',')}"
   
     
     
@@ -43,7 +41,6 @@ def testCCv3(script_location, changed_file)
   expressionArray = doc.xpath("/customer-care/imei-tac-mapping/imei-counter/@name");
   # imei_counter_name looks like this: General3G.IMEITAC
   expressionArray.each { |imei_counter_name|
-    puts "imei_counter_name.to_s.split('.')[0] is: #{imei_counter_name.to_s.split('.')[0]}"
     if !( available_services.include?( imei_counter_name.to_s.split('.')[0] ) )
       # if the available services does not include everything we're using, fail the test
       return false
