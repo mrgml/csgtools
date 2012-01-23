@@ -42,7 +42,8 @@ def testCCv3(script_location, changed_file)
   # imei_counter_name looks like this: General3G.IMEITAC
   expressionArray.each { |imei_counter_name|
     if !( available_services.include?( imei_counter_name.to_s.split('.')[0] ) )
-      # if the available services does not include everything we're using, fail the test
+      # if a service we're using is unavailable, output it and fail the test
+      puts "FAIL: the #{imei_counter_name.to_s.split('.')[0]} service is used to get an IMEITAC but that service doesn't exist."
       return false
     end
   }
