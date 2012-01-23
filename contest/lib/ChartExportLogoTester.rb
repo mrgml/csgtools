@@ -12,6 +12,8 @@ class ExportLogoTest
     exportLogoProperty = "chart_logo_export"
   
     customer = changed_file.split("/")[0]  # will give customer name ( string to first "/" )
+    
+    puts "customer is: #{customer}"
   
     requiredPropertyStart = "reports.images."
   

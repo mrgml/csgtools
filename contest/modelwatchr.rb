@@ -8,7 +8,7 @@ $LOAD_PATH << $CONTEST_LOCATION
 
 require 'nokogiri'  # for XML parsing
 
-require "#{$CONTEST_LOCATION}/lib/customercare3checker.rb"
+require "#{$CONTEST_LOCATION}/lib/customercare3/customercare3checker.rb"
 require "#{$CONTEST_LOCATION}/lib/testModelRunner.rb"
 require "#{$CONTEST_LOCATION}/lib/ModelDeploymentTester.rb"
 require "#{$CONTEST_LOCATION}/lib/ChartExportLogoTester.rb"
@@ -25,9 +25,13 @@ class ModelWatchr
   #  puts changed_file
 
     if changed_file.match('customercare3.xml')
-      # it's a customercare v3 file, pass to ccv3 test
-      status = testCCv3(script_location, changed_file)
-      test = "No test at all."
+      begin
+        # it's a customercare v3 file, pass to ccv3 test
+        status = testCCv3(script_location, changed_file)
+        test = "testCCv3"
+      rescue Exception
+        STDERR.puts "Customer Care 3 checker"
+      end
     end
   
     if changed_file.match('features.ext.properties')  # NB this is a regex match
