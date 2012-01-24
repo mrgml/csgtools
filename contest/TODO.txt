@@ -1,0 +1,6 @@
+a) refactor out the properties function
+b) refactor out loading services etc. from models
+c) read path to touchpoint/s from ENV
+d) change dir. structure to match config. structure.
+e) don't assume Growl exists
+f) check out configuring for Snarl

@@ -6,6 +6,7 @@
 5) change touchpoint locations in lib/testModelRunner.rb
 6) change java environments in lib/testModelRunner.rb
 7) install watchr (gem install watchr)
+7a) check that /usr/bin/watchr was created/is on path so the tool can be run, NB the shebang path
 8) install nokogiri (gem install nokogiri)
 
 Run contest like this:
