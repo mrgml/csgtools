@@ -22,7 +22,7 @@ def start_format_check(script_location, changed_file)
   start_format = start_format_node.to_s
   regex_pattern = /\((.*)\)/
   
-  # puts "regex_pattern is: #{regex_pattern}"
+  # puts "filename_regex is: #{regex_pattern}"
   # puts "filename_regex is: #{filename_regex}"
   # puts "start_format is #{start_format}"
   
@@ -30,6 +30,7 @@ def start_format_check(script_location, changed_file)
   if !my_matchdata
     return nil
   end
+  # puts "my_matchdata is: #{my_matchdata}"
   start_format_pattern = Regexp.new($1)  # $1 is the first group in the regex
   
   date_format_strings.each_pair do |key, value|
@@ -38,11 +39,11 @@ def start_format_check(script_location, changed_file)
   start_sample = start_format
   # puts "start_sample is #{start_sample}"
   # puts "start_format_pattern is: " + start_format_pattern.to_s
-  # puts start_format_pattern.match(start_sample).class
   
   result = start_format_pattern.match(start_sample)
+
   
-  if result
+  if result.to_s == start_sample
     puts "Passed."
   else
     puts "Failed."
@@ -51,8 +52,6 @@ def start_format_check(script_location, changed_file)
   
   return result
   
-  # puts "the matched regex is: #{my_matchdata[0]}"  # rescue this for when it doesn't match?
-  # puts "filename_regex is : #{filename_regex.match(/^()$/)}"
   
 end
 
