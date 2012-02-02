@@ -15,6 +15,9 @@ require "#{$CONTEST_LOCATION}/lib/ChartExportLogoTester.rb"
 require "#{$CONTEST_LOCATION}/lib/start_format_check.rb"
 require "#{$CONTEST_LOCATION}/lib/event_persistence_check.rb"
 
+$WORKSPACE = ENV['workspace']
+
+
 class ModelWatchr 
   def self.test(script_location, changed_file)
     customer = changed_file.split("/")[0]  # will give customer name ( string to first "/" )

@@ -5,12 +5,12 @@ def testModelRunner(script_location, changed_file)
   # Configure the resources
   # TODO: extract the workspace dir and just append the touchpoint branches as required
   # TODO: move the workspace location to a properties file, NB update the getting started file when this is done
-  modelTest42 = "/Users/garylyons/Documents/workspace/touchpoint_4_2_br/bin/testModel.sh"
-  modelTest45 = "/Users/garylyons/Documents/workspace/touchpoint_4_5_br/bin/testModel.sh"
-  modelTest51 = "/Users/garylyons/Documents/workspace/touchpoint_5_1_br/bin/testModel.sh"
-  modelTest52 = "/Users/garylyons/Documents/workspace/touchpoint_5_2_br/bin/testModel.sh"
-  touchpoint51home = "/Users/garylyons/Documents/workspace/touchpoint_5_1_br"
-  touchpoint52home = "/Users/garylyons/Documents/workspace/touchpoint_5_2_br"
+  modelTest42 = "#{$WORKSPACE}/touchpoint_4_2_br/bin/testModel.sh"
+  modelTest45 = "#{$WORKSPACE}/touchpoint_4_5_br/bin/testModel.sh"
+  modelTest51 = "#{$WORKSPACE}/touchpoint_5_1_br/bin/testModel.sh"
+  modelTest52 = "#{$WORKSPACE}/touchpoint_5_2_br/bin/testModel.sh"
+  touchpoint51home = "#{$WORKSPACE}/touchpoint_5_1_br"
+  touchpoint52home = "#{$WORKSPACE}/touchpoint_5_2_br"
   touchpoint_home = nil
   # TODO: move these env's to a properties file, NB update the getting started file when this is done
   envJava15 = "/Users/garylyons/.bash_profile"
