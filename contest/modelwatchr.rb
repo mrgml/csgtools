@@ -8,6 +8,7 @@ $LOAD_PATH << $CONTEST_LOCATION
 
 require 'nokogiri'  # for XML parsing
 
+require "#{$CONTEST_LOCATION}/lib/models/svn_rev_check.rb"
 require "#{$CONTEST_LOCATION}/lib/customercare3/customercare3checker.rb"
 require "#{$CONTEST_LOCATION}/lib/testModelRunner.rb"
 require "#{$CONTEST_LOCATION}/lib/ModelDeploymentTester.rb"
@@ -62,16 +63,9 @@ class ModelWatchr
     
     end
   
-  
+    status = true
   	# Select and run the appropriate test/s;  stripping because system is giving me "/n"
     if changed_file.match('models')
-      begin
-        status = testModelRunner(script_location, changed_file)
-        test = "\ntestModel.sh"
-      rescue Exception => test_model_exception
-        STDERR.puts "Got exception running testModel.sh"
-        STDERR.puts test_model_exception
-      end
       if status then
         begin
           status = start_format_check(script_location, changed_file)
@@ -86,7 +80,31 @@ class ModelWatchr
           STDERR.puts "The exception model is: #{changed_file}"
         end
       end
-    
+      if status then
+        begin
+          status = svn_rev_check(script_location, changed_file)
+          if status
+            test += "\nsvn_rev_check"
+          else
+            test = "\nsvn_rev_check"
+          end
+        rescue Exception => exception
+          STDERR.puts "Got exception running svn_rev_check"
+          STDERR.puts "Exception info: \n #{exception} \n #{exception.backtrace.join("\n")}"
+          STDERR.puts "The exception model is: #{changed_file}"
+        end
+      end
+      begin
+        status = testModelRunner(script_location, changed_file)
+        if status
+          test += "\ntestModel.sh"
+        else
+          test = "\ntestModel.sh"
+        end
+      rescue Exception => test_model_exception
+        STDERR.puts "Got exception running testModel.sh"
+        STDERR.puts test_model_exception
+      end
     else
     end
 	
