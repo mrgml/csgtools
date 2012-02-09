@@ -13,7 +13,7 @@ def testModelRunner(script_location, changed_file)
   # TODO: move these env's to a properties file, NB update the getting started file when this is done
   envJava15 = "~/.bash_java15"
   envJava16 = "~/.bash_java16"
-  envJava = envJava15
+  envJava = envJava16
   
   puts script_location
   puts changed_file 
