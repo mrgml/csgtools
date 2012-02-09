@@ -1,6 +1,13 @@
 a) refactor out the properties function
 b) refactor out loading services etc. from models
-c) read path to touchpoint/s from ENV
 d) change dir. structure to match config. structure.
 e) don't assume Growl exists
 f) check out configuring for Snarl
+g) set up a better git repo than the magpie daemon
+h) move the TODO and getting started files to markdown
+
+
+
+DONE 
+c) read path to touchpoint/s from ENV - 
+

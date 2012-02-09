@@ -6,12 +6,12 @@
 5) configure the $workspace environment variable to point to where you have touchpoint_X_Y_br checked out
 6) create ~/.bash_java15 and ~/.bash_java16 to set up the bin and $JAVA_HOME
 7) install watchr (gem install watchr)
-7a) check that /usr/bin/watchr was created/is on path so the tool can be run, NB the shebang path
-8) install nokogiri (gem install nokogiri)
+8) check that /usr/bin/watchr was created/is on path so the tool can be run, NB the shebang path
+9) install nokogiri (gem install nokogiri)
 
 Run contest like this:
 1) cd to the customers/trunk directory
-2) watchr /path/to/csgtools/contest/modelwatchr.rb  (this path might currently be wrong)
+2) watchr /path/to/csgtools/contest/modelwatchr.rb  
 
 Try it out:
 1) edit a model file and save it (it should run the relevant testModel)
